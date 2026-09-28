@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LógicaQuest — aprenda lógica de programação jogando</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f5f6fa;--card:#fff;--tx:#1b1e2b;--mu:#666c80;--ac:#5b5bf0;--ok:#16a34a;--er:#dc2626;--bd:#dfe2ec;--code:#eef0f7}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12141c;--card:#1c1f2b;--tx:#eceef6;--mu:#98a0b8;--ac:#8b8bff;--ok:#4ade80;--er:#f87171;--bd:#2c3042;--code:#0f1118}}
+:root[data-theme="dark"]{--bg:#12141c;--card:#1c1f2b;--tx:#eceef6;--mu:#98a0b8;--ac:#8b8bff;--ok:#4ade80;--er:#f87171;--bd:#2c3042;--code:#0f1118}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:720px;margin:0 auto;padding:16px}
+h1{font-size:1.6rem;margin:.2em 0}h2{font-size:1.2rem;margin:1em 0 .5em}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin:12px 0}
+button,input{font:inherit}
+button{cursor:pointer;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:10px;padding:10px 14px}
+button:hover{border-color:var(--ac)}
+.pri{background:var(--ac);color:#fff;border-color:var(--ac);font-weight:600}
+input[type=text],input[type=password]{width:100%;padding:11px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx);margin:6px 0}
+input[type=range]{width:100%;accent-color:var(--ac)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.bar{height:8px;background:var(--bd);border-radius:6px;overflow:hidden}.bar i{display:block;height:100%;background:var(--ac)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.lv{text-align:left}.lv b{display:block}.lv small{color:var(--mu)}
+.tag{display:inline-block;font-size:.75rem;padding:1px 8px;border-radius:99px;background:var(--code);color:var(--mu);margin-right:4px}
+pre{background:var(--code);border-radius:10px;padding:12px;overflow-x:auto;margin:10px 0;font:14px/1.6 ui-monospace,Menlo,Consolas,monospace}
+.ln{display:block;padding:0 6px;border-radius:6px;white-space:pre}
+.pick .ln{cursor:pointer}.pick .ln:hover{background:var(--bd)}
+.ok{outline:2px solid var(--ok)}.no{outline:2px solid var(--er)}
+.opts{display:grid;gap:8px}.opts button{text-align:left;font-family:ui-monospace,Menlo,monospace}
+.msg{margin-top:10px;padding:10px;border-radius:10px;background:var(--code)}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.chip{font-family:ui-monospace,Menlo,monospace;font-size:13px;white-space:pre;text-align:left}
+.done{opacity:.6}
+</style></head><body><main id="app"></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+const LV=[["Iniciante","0–20","Variáveis, condições e saída"],["Básico","21–40","Laços, funções e contas"],["Intermediário","41–60","Arrays, strings e recursão"],["Avançado","61–80","Armadilhas da linguagem e algoritmos"],["Sênior","81–100","Assíncrono, memória e segurança"]];
+const MODE={out:"🔮 Prever a Saída",bug:"🐞 Caçador de Bugs",ord:"🧩 Monte o Código"};
+const Q=[
+{l:0,t:"out",g:"JavaScript",c:["let a = 2;","let b = 3;","console.log(a + b);"],o:["5","23","ab","erro"],a:0,e:"Com números, + soma: 2 + 3 = 5."},
+{l:0,t:"out",g:"Python",c:["x = 4","if x > 3:","    print('grande')","else:","    print('pequeno')"],o:["grande","pequeno","4","erro"],a:0,e:"4 > 3 é verdadeiro, então entra no if."},
+{l:0,t:"bug",g:"JavaScript",c:["let nome = 'Ana';","console.log(nme);"],a:1,h:"Uma variável está escrita errada.",e:"'nme' não existe; o correto é 'nome'."},
+{l:0,t:"ord",g:"Python",c:["soma = 0","for i in range(3):","    soma += i","print(soma)"],e:"Inicia, repete somando e só depois imprime."},
+{l:1,t:"out",g:"Python",c:["for i in range(3):","    print(i, end=' ')"],o:["0 1 2","1 2 3","0 1 2 3","1 2"],a:0,e:"range(3) gera 0, 1 e 2."},
+{l:1,t:"out",g:"C",c:["int x = 5;","x = x * 2 - 3;","printf(\"%d\", x);"],o:["7","10","2","13"],a:0,e:"5*2 = 10; 10-3 = 7."},
+{l:1,t:"bug",g:"Python",c:["def dobro(n):","    return n * 2","print(dobro 4)"],a:2,h:"Chamada de função.",e:"Faltaram os parênteses: dobro(4)."},
+{l:1,t:"ord",g:"JavaScript",c:["let total = 0;","for (let i = 1; i <= 4; i++) {","  total += i;","}","console.log(total);"],e:"Declara, faz o laço, fecha e imprime (10)."},
+{l:2,t:"out",g:"JavaScript",c:["const a = [1, 2, 3, 4];","console.log(a.filter(n => n % 2 == 0).map(n => n * 3));"],o:["[6, 12]","[3, 9]","[2, 4]","[2, 6]"],a:0,e:"filter fica com 2 e 4; map multiplica por 3."},
+{l:2,t:"out",g:"Python",c:["s = 'banana'","print(s.count('an'), s[::-1][:2])"],o:["2 an","3 an","2 na","3 na"],a:0,e:"'an' aparece 2 vezes; invertida vira 'ananab' → 'an'."},
+{l:2,t:"bug",g:"Java",c:["int[] v = {1, 2, 3};","for (int i = 0; i <= v.length; i++) {","  System.out.println(v[i]);","}"],a:1,h:"Erro de limite (off-by-one).",e:"Deve ser i < v.length, senão acessa o índice 3."},
+{l:2,t:"ord",g:"Python",c:["def fib(n):","    if n < 2:","        return n","    return fib(n-1) + fib(n-2)"],e:"Caso base primeiro, depois a chamada recursiva."},
+{l:3,t:"out",g:"JavaScript",c:["console.log(typeof null, 0.1 + 0.2 === 0.3);"],o:["object false","null true","object true","null false"],a:0,e:"typeof null é 'object' (quirk histórico) e 0.1+0.2 tem erro de ponto flutuante."},
+{l:3,t:"out",g:"Python",c:["def f(a, l=[]):","    l.append(a)","    return l","f(1)","print(f(2))"],o:["[1, 2]","[2]","[1]","[]"],a:0,e:"O valor padrão mutável é criado uma vez e compartilhado entre chamadas."},
+{l:3,t:"bug",g:"JavaScript",c:["for (var i = 0; i < 3; i++) {","  setTimeout(() => console.log(i), 0);","}"],a:0,h:"Queremos imprimir 0 1 2, mas imprime 3 3 3.",e:"var tem escopo de função; use let para um i por iteração."},
+{l:3,t:"ord",g:"JavaScript",c:["let lo = 0, hi = a.length - 1;","while (lo <= hi) {","  const m = (lo + hi) >> 1;","  if (a[m] === x) return m;","  if (a[m] < x) lo = m + 1; else hi = m - 1;","}","return -1;"],e:"Busca binária: reduz o intervalo pela metade a cada passo."},
+{l:4,t:"out",g:"JavaScript",c:["console.log(1);","setTimeout(() => console.log(2), 0);","Promise.resolve().then(() => console.log(3));","console.log(4);"],o:["1 4 3 2","1 2 3 4","1 3 4 2","1 4 2 3"],a:0,e:"Código síncrono, depois microtarefas (Promise), depois macrotarefas (setTimeout)."},
+{l:4,t:"out",g:"C",c:["int a[] = {10, 20, 30};","int *p = a;","printf(\"%d\", *(p + 2));"],o:["30","20","10","endereço"],a:0,e:"Aritmética de ponteiros: p+2 aponta para o 3º elemento."},
+{l:4,t:"bug",g:"Python + SQL",c:["def get_user(db, user_id):","    q = 'SELECT * FROM users WHERE id = ' + user_id","    return db.execute(q)"],a:1,h:"Problema de segurança.",e:"Concatenar entrada do usuário permite SQL Injection; use consulta parametrizada."},
+{l:4,t:"ord",g:"JavaScript",c:["function debounce(fn, ms) {","  let t;","  return (...args) => {","    clearTimeout(t);","    t = setTimeout(() => fn(...args), ms);","  };","}"],e:"Cada chamada cancela o timer anterior e agenda um novo."}
+];
+Q.forEach((q,i)=>q.id=i);
+const SB_URL='COLE_AQUI_A_PROJECT_URL',SB_KEY='COLE_AQUI_A_ANON_KEY';
+const sb=supabase.createClient(SB_URL,SB_KEY),$app=document.getElementById('app');
+let USER=null,NAME='',DONE={};
+const save=async()=>{if(!USER)return;await sb.from('progress').upsert({user_id:USER,done:DONE,updated_at:new Date().toISOString()})};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const me=()=>({xp:Object.keys(DONE).length*10,done:DONE});
+const code=(ls,cls='')=>`<pre class="${cls}">${ls.map((l,i)=>`<span class="ln" data-i="${i}">${esc(l)}</span>`).join('')}</pre>`;
+
+function login(){
+  $app.innerHTML=`<h1>🎮 LógicaQuest</h1><p>Aprenda lógica de programação jogando — do zero ao sênior, em várias linguagens.</p>
+  <div class="card"><h2>Entrar</h2><button class="pri" id="gg" style="width:100%">Entrar com Google</button>
+  <p style="text-align:center;color:var(--mu)">ou com e-mail</p>
+  <input type="text" id="n" placeholder="E-mail" autocomplete="email"><input type="password" id="p" placeholder="Senha (mínimo 8 caracteres)" autocomplete="current-password">
+  <div class="row"><button class="pri" id="in">Entrar</button><button id="rg">Criar conta</button></div><div id="er" style="color:var(--er);margin-top:8px"></div></div>`;
+  const er=t=>{$('#er').textContent=t};
+  $('#gg').onclick=()=>sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin}});
+  $('#in').onclick=async()=>{const{error}=await sb.auth.signInWithPassword({email:$('#n').value.trim(),password:$('#p').value});if(error)er('E-mail ou senha incorretos.')};
+  $('#rg').onclick=async()=>{const p=$('#p').value;if(p.length<8){er('Use uma senha com 8+ caracteres.');return}const{data,error}=await sb.auth.signUp({email:$('#n').value.trim(),password:p});if(error)er(error.message);else if(!data.session)er('Conta criada! Confirme seu e-mail para ativar.')};
+}
+function $(s){return document.querySelector(s)}
+function head(){return`<div class="top"><h1>🎮 LógicaQuest</h1><div><span class="tag">👤 ${esc(NAME)}</span><span class="tag">⭐ ${me().xp} XP</span> <button id="out">Sair</button></div></div>`}
+function bindOut(){$('#out').onclick=()=>sb.auth.signOut()}
+function prog(l){const qs=Q.filter(q=>q.l==l),d=qs.filter(q=>me().done[q.id]).length;return[d,qs.length]}
+function home(){
+  $app.innerHTML=head()+`<div class="card"><h2>Onde você quer começar?</h2><p>Arraste: <b>0</b> = nunca programei · <b>100</b> = já sou sênior.</p>
+  <input type="range" id="r" min="0" max="100" value="0"><div class="top"><b id="rv">0 · Iniciante</b><button class="pri" id="go">Começar daqui</button></div></div>
+  <h2>Ou escolha um nível</h2><div class="grid">${LV.map((v,i)=>{const[d,t]=prog(i);return`<button class="lv card" data-l="${i}"><b>${v[0]} <small>(${v[1]})</small></b><small>${v[2]}</small><div class="bar" style="margin-top:8px"><i style="width:${d/t*100}%"></i></div><small>${d}/${t} jogos</small></button>`}).join('')}</div>`;
+  bindOut();
+  const lvOf=v=>Math.max(0,Math.min(4,Math.floor((v-1)/20)));
+  $('#r').oninput=e=>$('#rv').textContent=e.target.value+' · '+LV[lvOf(+e.target.value)][0];
+  $('#go').onclick=()=>level(lvOf(+$('#r').value));
+  document.querySelectorAll('.lv').forEach(b=>b.onclick=()=>level(+b.dataset.l));
+}
+function level(l){
+  const qs=Q.filter(q=>q.l==l);
+  $app.innerHTML=head()+`<button id="bk">← Níveis</button><h2>${LV[l][0]} (${LV[l][1]})</h2><div class="grid">${qs.map(q=>`<button class="lv card ${me().done[q.id]?'done':''}" data-i="${q.id}"><b>${MODE[q.t]} ${me().done[q.id]?'✅':''}</b><span class="tag">${esc(q.g)}</span></button>`).join('')}</div>`;
+  bindOut();$('#bk').onclick=home;
+  document.querySelectorAll('.lv').forEach(b=>b.onclick=()=>play(+b.dataset.i));
+}
+function fin(q,ok){
+  let x='';if(ok&&!me().done[q.id]){DONE[q.id]=1;save();x=' +10 XP'}
+  const nx=Q.find(z=>z.l==q.l&&z.id>q.id);
+  $('#fb').innerHTML=`<div class="msg">${ok?'✅ Correto!'+x:'❌ Não foi dessa vez.'}<br>${esc(q.e)}<div class="row">${ok&&nx?'<button class="pri" id="nx">Próximo jogo →</button>':''}${ok?'':'<button id="rt">Tentar de novo</button>'}<button id="lb">Voltar ao nível</button></div></div>`;
+  $('#lb').onclick=()=>level(q.l);if($('#nx'))$('#nx').onclick=()=>play(nx.id);if($('#rt'))$('#rt').onclick=()=>play(q.id);
+}
+function play(id){
+  const q=Q[id];
+  $app.innerHTML=head()+`<button id="bk">← ${LV[q.l][0]}</button><div class="card"><b>${MODE[q.t]}</b> <span class="tag">${esc(q.g)}</span>
+  <p>${q.t=='out'?'O que este código imprime?':q.t=='bug'?'Clique na linha com o erro. <i>Dica: '+esc(q.h)+'</i>':'Clique nas linhas na ordem certa para montar o código.'}</p><div id="box"></div><div id="fb"></div></div>`;
+  bindOut();$('#bk').onclick=()=>level(q.l);
+  const box=$('#box');
+  if(q.t=='out'){
+    box.innerHTML=code(q.c)+`<div class="opts">${q.o.map((o,i)=>`<button data-i="${i}">${esc(o)}</button>`).join('')}</div>`;
+    box.querySelectorAll('button').forEach(b=>b.onclick=()=>{const ok=+b.dataset.i==q.a;box.querySelectorAll('button').forEach(x=>x.disabled=true);b.classList.add(ok?'ok':'no');fin(q,ok)});
+  }else if(q.t=='bug'){
+    box.innerHTML=code(q.c,'pick');
+    box.querySelectorAll('.ln').forEach(l=>l.onclick=()=>{if(box.dataset.d)return;box.dataset.d=1;const ok=+l.dataset.i==q.a;l.classList.add(ok?'ok':'no');if(!ok)box.querySelectorAll('.ln')[q.a].classList.add('ok');fin(q,ok)});
+  }else{
+    const pool=q.c.map((t,i)=>({t,i})).sort(()=>Math.random()-.5),got=[];
+    const draw=()=>{box.innerHTML=`<pre>${got.length?got.map(g=>`<span class="ln">${esc(g.t)}</span>`).join(''):'<span style="color:var(--mu)">(vazio)</span>'}</pre><div class="row">${pool.filter(p=>!got.includes(p)).map(p=>`<button class="chip" data-i="${p.i}">${esc(p.t)}</button>`).join('')}</div><div class="row"><button id="rs">↺ Recomeçar</button></div>`;
+      box.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{got.push(pool.find(p=>p.i==b.dataset.i));if(got.length==pool.length){const ok=got.every(g=>g.t===q.c[got.indexOf(g)]);box.innerHTML=`<pre class="${ok?'ok':'no'}">${got.map(g=>`<span class="ln">${esc(g.t)}</span>`).join('')}</pre>`;fin(q,ok)}else draw()});
+      $('#rs').onclick=()=>{got.length=0;draw()}};
+    draw();
+  }
+}
+$app.innerHTML='<p>Carregando…</p>';
+sb.auth.onAuthStateChange((ev,ses)=>{setTimeout(async()=>{
+  if(!ses){USER=null;DONE={};login();return}
+  if(USER===ses.user.id)return;
+  USER=ses.user.id;NAME=ses.user.user_metadata?.full_name||ses.user.email||'';
+  const{data}=await sb.from('progress').select('done').eq('user_id',USER).maybeSingle();
+  DONE=(data&&data.done)||{};home();
+},0)});
+</script></body></html>
