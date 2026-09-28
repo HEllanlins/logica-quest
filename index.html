@@ -60,7 +60,7 @@ const Q=[
 {l:4,t:"ord",g:"JavaScript",c:["function debounce(fn, ms) {","  let t;","  return (...args) => {","    clearTimeout(t);","    t = setTimeout(() => fn(...args), ms);","  };","}"],e:"Cada chamada cancela o timer anterior e agenda um novo."}
 ];
 Q.forEach((q,i)=>q.id=i);
-const SB_URL='sb_publishable_xYsCW2OGo__9kM20goiscg_E5sPYcV3',SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5rcGVpbGt2bndwbGloZGlnaXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2MjY2OTUsImV4cCI6MjEwNjIwMjY5NX0.hqyJ1rPy4-PZE1pTzENpToeUWDzwrxmP7e1mU5jhRK4';
+const SB_URL='https://nkpeilkvnwplihdigitw.supabase.co',SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5rcGVpbGt2bndwbGloZGlnaXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2MjY2OTUsImV4cCI6MjEwNjIwMjY5NX0.hqyJ1rPy4-PZE1pTzENpToeUWDzwrxmP7e1mU5jhRK4';
 const sb=supabase.createClient(SB_URL,SB_KEY),$app=document.getElementById('app');
 let USER=null,NAME='',DONE={};
 const save=async()=>{if(!USER)return;await sb.from('progress').upsert({user_id:USER,done:DONE,updated_at:new Date().toISOString()})};
