@@ -1,129 +1,307 @@
 <!DOCTYPE html>
-<html lang="pt-BR"><head><meta charset="utf-8">
+<html lang="pt-BR" data-theme="dark"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>LógicaQuest — aprenda lógica de programação jogando</title>
 <style>
-:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f5f6fa;--card:#fff;--tx:#1b1e2b;--mu:#666c80;--ac:#5b5bf0;--ok:#16a34a;--er:#dc2626;--bd:#dfe2ec;--code:#eef0f7}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12141c;--card:#1c1f2b;--tx:#eceef6;--mu:#98a0b8;--ac:#8b8bff;--ok:#4ade80;--er:#f87171;--bd:#2c3042;--code:#0f1118}}
-:root[data-theme="dark"]{--bg:#12141c;--card:#1c1f2b;--tx:#eceef6;--mu:#98a0b8;--ac:#8b8bff;--ok:#4ade80;--er:#f87171;--bd:#2c3042;--code:#0f1118}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-main{max-width:720px;margin:0 auto;padding:16px}
-h1{font-size:1.6rem;margin:.2em 0}h2{font-size:1.2rem;margin:1em 0 .5em}
-.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin:12px 0}
-button,input{font:inherit}
-button{cursor:pointer;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:10px;padding:10px 14px}
-button:hover{border-color:var(--ac)}
-.pri{background:var(--ac);color:#fff;border-color:var(--ac);font-weight:600}
-input[type=text],input[type=password]{width:100%;padding:11px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx);margin:6px 0}
-input[type=range]{width:100%;accent-color:var(--ac)}
-.top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
-.bar{height:8px;background:var(--bd);border-radius:6px;overflow:hidden}.bar i{display:block;height:100%;background:var(--ac)}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
-.lv{text-align:left}.lv b{display:block}.lv small{color:var(--mu)}
-.tag{display:inline-block;font-size:.75rem;padding:1px 8px;border-radius:99px;background:var(--code);color:var(--mu);margin-right:4px}
-pre{background:var(--code);border-radius:10px;padding:12px;overflow-x:auto;margin:10px 0;font:14px/1.6 ui-monospace,Menlo,Consolas,monospace}
-.ln{display:block;padding:0 6px;border-radius:6px;white-space:pre}
-.pick .ln{cursor:pointer}.pick .ln:hover{background:var(--bd)}
-.ok{outline:2px solid var(--ok)}.no{outline:2px solid var(--er)}
-.opts{display:grid;gap:8px}.opts button{text-align:left;font-family:ui-monospace,Menlo,monospace}
-.msg{margin-top:10px;padding:10px;border-radius:10px;background:var(--code)}
-.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.chip{font-family:ui-monospace,Menlo,monospace;font-size:13px;white-space:pre;text-align:left}
-.done{opacity:.6}
-</style></head><body><main id="app"></main>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root[data-theme=light]{--bg:#e9edff;--g:rgba(255,255,255,.55);--gb:rgba(255,255,255,.85);--tx:#161a2e;--mu:#59607a;--ac:#6d5dfc;--ac2:#00b4f0;--sh:#b9bfe6;--code:rgba(20,25,60,.07);--ok:#15a34a;--er:#dc2626}
+:root[data-theme=dark]{--bg:#0a0c18;--g:rgba(32,36,66,.5);--gb:rgba(255,255,255,.14);--tx:#eceef8;--mu:#9aa2c0;--ac:#8b7bff;--ac2:#22d3ee;--sh:#05060e;--code:rgba(0,0,0,.35);--ok:#4ade80;--er:#f87171}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh}
+.bg i{position:fixed;z-index:-1;border-radius:50%;filter:blur(80px);opacity:.5;animation:fl 14s ease-in-out infinite alternate}
+.bg i:nth-child(1){width:46vmax;height:46vmax;background:var(--ac);top:-12vmax;left:-10vmax}
+.bg i:nth-child(2){width:38vmax;height:38vmax;background:var(--ac2);bottom:-10vmax;right:-8vmax;animation-delay:-5s}
+.bg i:nth-child(3){width:26vmax;height:26vmax;background:#ff4ecd;top:40%;left:55%;animation-delay:-9s;opacity:.3}
+@keyframes fl{to{transform:translate(50px,-60px) scale(1.25)}}
+@keyframes up{from{opacity:0;transform:translateY(16px)}}
+@keyframes flt{50%{transform:translateY(-8px)}}
+@keyframes pop{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.3)}}
+main{max-width:760px;margin:0 auto;padding:16px;position:relative}
+h1{font-size:1.5rem;margin:.2em 0;background:linear-gradient(90deg,var(--ac),var(--ac2));-webkit-background-clip:text;background-clip:text;color:transparent}
+h2{font-size:1.2rem;margin:1em 0 .5em}.mu,small{color:var(--mu)}
+.glass{background:var(--g);backdrop-filter:blur(18px) saturate(1.5);-webkit-backdrop-filter:blur(18px) saturate(1.5);border:1px solid var(--gb);box-shadow:0 8px 32px rgba(0,0,0,.2),inset 0 1px 0 var(--gb)}
+.card{border-radius:18px;padding:16px;margin:12px 0}.up{animation:up .5s both}
+.login{max-width:420px;margin:7vh auto 0;animation:up .6s both,flt 6s ease-in-out 1s infinite}
+button{font:inherit;cursor:pointer;color:var(--tx)}button:disabled{opacity:.45;cursor:not-allowed}
+.b3d{background:var(--g);border:1px solid var(--gb);border-radius:12px;padding:10px 14px;box-shadow:0 4px 0 var(--sh),0 10px 18px rgba(0,0,0,.18);transition:transform .15s,box-shadow .15s}
+.b3d:hover:not(:disabled){transform:translateY(-2px)}.b3d:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--sh)}
+.pri{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;border:0;font-weight:600;--sh:#3a2db0}.sm{padding:6px 10px;font-size:.9rem}
+input{font:inherit;width:100%;padding:12px;margin:6px 0;border-radius:12px;border:1px solid var(--gb);background:var(--code);color:var(--tx)}
+.top,.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.top{justify-content:space-between}.row{margin-top:10px}
+.bar{height:10px;background:var(--code);border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--ac),var(--ac2));transition:width .6s}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.lv{text-align:left;border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:6px;transition:transform .25s}
+.lv:hover:not(:disabled){transform:perspective(700px) rotateX(5deg) translateY(-5px)}.lock{opacity:.8}.done{border-color:var(--ok)}
+.tag{display:inline-block;font-size:.75rem;padding:2px 9px;border-radius:99px;background:var(--code);color:var(--mu)}
+pre{background:var(--code);border-radius:12px;padding:12px;overflow-x:auto;margin:10px 0;font:14px/1.6 ui-monospace,Menlo,Consolas,monospace}
+.ln{display:block;padding:0 6px;border-radius:6px;white-space:pre}.pick .ln{cursor:pointer}.pick .ln:hover,.pl{cursor:pointer}.pl:hover{background:var(--code)}
+.ok{outline:2px solid var(--ok)}.no{outline:2px solid var(--er)!important}.dim{opacity:.3}.cand{background:rgba(250,204,21,.25)}
+.opts{display:grid;gap:10px}.opts button{text-align:left;font-family:ui-monospace,Menlo,monospace}
+.chip{font:13px ui-monospace,Menlo,monospace;white-space:pre;text-align:left}
+.msg{margin-top:12px;padding:12px;border-radius:12px;background:var(--code);animation:up .4s}.pop{display:inline-block;animation:pop .6s;color:var(--ok)}
+.fab{position:fixed;right:14px;top:calc(12px + env(safe-area-inset-top,0px));z-index:5;border-radius:50%;width:44px;height:44px;padding:0}
+.bd{display:flex;gap:8px;flex-wrap:wrap}.bd span{padding:8px 12px;border-radius:12px}.off{filter:grayscale(1);opacity:.4}
+#ts{position:fixed;left:0;right:0;bottom:calc(18px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;z-index:9}
+#ts div{padding:10px 16px;border-radius:14px;animation:up .4s}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body><div class="bg"><i></i><i></i><i></i></div>
+<button id="th" class="b3d fab" aria-label="Alternar tema"></button><div id="ts"></div><main id="app"></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
-const LV=[["Iniciante","0–20","Variáveis, condições e saída"],["Básico","21–40","Laços, funções e contas"],["Intermediário","41–60","Arrays, strings e recursão"],["Avançado","61–80","Armadilhas da linguagem e algoritmos"],["Sênior","81–100","Assíncrono, memória e segurança"]];
-const MODE={out:"🔮 Prever a Saída",bug:"🐞 Caçador de Bugs",ord:"🧩 Monte o Código"};
-const Q=[
-{l:0,t:"out",g:"JavaScript",c:["let a = 2;","let b = 3;","console.log(a + b);"],o:["5","23","ab","erro"],a:0,e:"Com números, + soma: 2 + 3 = 5."},
-{l:0,t:"out",g:"Python",c:["x = 4","if x > 3:","    print('grande')","else:","    print('pequeno')"],o:["grande","pequeno","4","erro"],a:0,e:"4 > 3 é verdadeiro, então entra no if."},
-{l:0,t:"bug",g:"JavaScript",c:["let nome = 'Ana';","console.log(nme);"],a:1,h:"Uma variável está escrita errada.",e:"'nme' não existe; o correto é 'nome'."},
-{l:0,t:"ord",g:"Python",c:["soma = 0","for i in range(3):","    soma += i","print(soma)"],e:"Inicia, repete somando e só depois imprime."},
-{l:1,t:"out",g:"Python",c:["for i in range(3):","    print(i, end=' ')"],o:["0 1 2","1 2 3","0 1 2 3","1 2"],a:0,e:"range(3) gera 0, 1 e 2."},
-{l:1,t:"out",g:"C",c:["int x = 5;","x = x * 2 - 3;","printf(\"%d\", x);"],o:["7","10","2","13"],a:0,e:"5*2 = 10; 10-3 = 7."},
-{l:1,t:"bug",g:"Python",c:["def dobro(n):","    return n * 2","print(dobro 4)"],a:2,h:"Chamada de função.",e:"Faltaram os parênteses: dobro(4)."},
-{l:1,t:"ord",g:"JavaScript",c:["let total = 0;","for (let i = 1; i <= 4; i++) {","  total += i;","}","console.log(total);"],e:"Declara, faz o laço, fecha e imprime (10)."},
-{l:2,t:"out",g:"JavaScript",c:["const a = [1, 2, 3, 4];","console.log(a.filter(n => n % 2 == 0).map(n => n * 3));"],o:["[6, 12]","[3, 9]","[2, 4]","[2, 6]"],a:0,e:"filter fica com 2 e 4; map multiplica por 3."},
-{l:2,t:"out",g:"Python",c:["s = 'banana'","print(s.count('an'), s[::-1][:2])"],o:["2 an","3 an","2 na","3 na"],a:0,e:"'an' aparece 2 vezes; invertida vira 'ananab' → 'an'."},
-{l:2,t:"bug",g:"Java",c:["int[] v = {1, 2, 3};","for (int i = 0; i <= v.length; i++) {","  System.out.println(v[i]);","}"],a:1,h:"Erro de limite (off-by-one).",e:"Deve ser i < v.length, senão acessa o índice 3."},
-{l:2,t:"ord",g:"Python",c:["def fib(n):","    if n < 2:","        return n","    return fib(n-1) + fib(n-2)"],e:"Caso base primeiro, depois a chamada recursiva."},
-{l:3,t:"out",g:"JavaScript",c:["console.log(typeof null, 0.1 + 0.2 === 0.3);"],o:["object false","null true","object true","null false"],a:0,e:"typeof null é 'object' (quirk histórico) e 0.1+0.2 tem erro de ponto flutuante."},
-{l:3,t:"out",g:"Python",c:["def f(a, l=[]):","    l.append(a)","    return l","f(1)","print(f(2))"],o:["[1, 2]","[2]","[1]","[]"],a:0,e:"O valor padrão mutável é criado uma vez e compartilhado entre chamadas."},
-{l:3,t:"bug",g:"JavaScript",c:["for (var i = 0; i < 3; i++) {","  setTimeout(() => console.log(i), 0);","}"],a:0,h:"Queremos imprimir 0 1 2, mas imprime 3 3 3.",e:"var tem escopo de função; use let para um i por iteração."},
-{l:3,t:"ord",g:"JavaScript",c:["let lo = 0, hi = a.length - 1;","while (lo <= hi) {","  const m = (lo + hi) >> 1;","  if (a[m] === x) return m;","  if (a[m] < x) lo = m + 1; else hi = m - 1;","}","return -1;"],e:"Busca binária: reduz o intervalo pela metade a cada passo."},
-{l:4,t:"out",g:"JavaScript",c:["console.log(1);","setTimeout(() => console.log(2), 0);","Promise.resolve().then(() => console.log(3));","console.log(4);"],o:["1 4 3 2","1 2 3 4","1 3 4 2","1 4 2 3"],a:0,e:"Código síncrono, depois microtarefas (Promise), depois macrotarefas (setTimeout)."},
-{l:4,t:"out",g:"C",c:["int a[] = {10, 20, 30};","int *p = a;","printf(\"%d\", *(p + 2));"],o:["30","20","10","endereço"],a:0,e:"Aritmética de ponteiros: p+2 aponta para o 3º elemento."},
-{l:4,t:"bug",g:"Python + SQL",c:["def get_user(db, user_id):","    q = 'SELECT * FROM users WHERE id = ' + user_id","    return db.execute(q)"],a:1,h:"Problema de segurança.",e:"Concatenar entrada do usuário permite SQL Injection; use consulta parametrizada."},
-{l:4,t:"ord",g:"JavaScript",c:["function debounce(fn, ms) {","  let t;","  return (...args) => {","    clearTimeout(t);","    t = setTimeout(() => fn(...args), ms);","  };","}"],e:"Cada chamada cancela o timer anterior e agenda um novo."}
-];
-Q.forEach((q,i)=>q.id=i);
 const SB_URL='https://nkpeilkvnwplihdigitw.supabase.co',SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5rcGVpbGt2bndwbGloZGlnaXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2MjY2OTUsImV4cCI6MjEwNjIwMjY5NX0.hqyJ1rPy4-PZE1pTzENpToeUWDzwrxmP7e1mU5jhRK4';
-const sb=supabase.createClient(SB_URL,SB_KEY),$app=document.getElementById('app');
-let USER=null,NAME='',DONE={};
-const save=async()=>{if(!USER)return;await sb.from('progress').upsert({user_id:USER,done:DONE,updated_at:new Date().toISOString()})};
+const LV=[["Iniciante","0–20","Variáveis, condições e saída"],["Básico","21–40","Laços, funções e tipos"],["Intermediário","41–60","Coleções, strings e recursão"],["Avançado","61–80","Armadilhas e algoritmos"],["Sênior","81–100","Concorrência, memória e segurança"]];
+const K={o:"🔮 Prever a Saída",b:"🐞 Caçar o Bug",r:"🧩 Montar o Código",m:"🎮 Minigame"};
+/* Tarefa: [tipo, linguagem, código, resposta, opções, explicação]. Para novas tarefas, SEMPRE adicione no FIM da lista do nível (o progresso é salvo por posição). */
+const T=[[
+["o","JavaScript",`let a = 2;
+let b = 3;
+console.log(a + b);`,1,["23","5","ab","erro"],"Com números, + soma: 5."],
+["o","Python",`x = 4
+if x > 3:
+    print("grande")
+else:
+    print("pequeno")`,2,["pequeno","4","grande","erro"],"4 > 3 é verdadeiro, então entra no if."],
+["b","JavaScript",`let nome = "Ana";
+console.log(nme);`,1,0,"'nme' não existe; o certo é 'nome'."],
+["o","Go",`x := 3
+fmt.Println(x * 2)`,1,["5","6","32","erro"],"3 * 2 = 6."],
+["o","PHP",`$n = 5;
+echo $n + 1;`,0,["6","51","$n+1","erro"],"No PHP, + soma números: 6."],
+["r","Python",`soma = 0
+for i in range(3):
+    soma += i
+print(soma)`,0,0,"Inicia, repete somando e só depois imprime."],
+["m","Python",`import random
+n = random.randint(1, 5)
+g = int(input("Chute: "))
+if g == n:
+    print("Acertou!")
+else:
+    print("Errou!")`,0,0,"Sorteia, lê o chute, compara. Seu primeiro jogo!"]
+],[
+["o","Python",`for i in range(3):
+    print(i, end=" ")`,1,["1 2 3","0 1 2","0 1 2 3","1 2"],"range(3) gera 0, 1 e 2."],
+["o","C",`int x = 5;
+x = x * 2 - 3;
+printf("%d", x);`,0,["7","10","2","13"],"5*2 = 10; 10-3 = 7."],
+["b","Python",`def dobro(n):
+    return n * 2
+print(dobro 4)`,2,0,"Faltaram os parênteses: dobro(4)."],
+["o","Ruby",`3.times { |i| print i }`,0,["012","123","0 1 2","3"],"times(3) repete com i = 0, 1, 2."],
+["o","C#",`int a = 7 / 2;
+Console.WriteLine(a);`,2,["3.5","4","3","3.0"],"Divisão entre inteiros descarta a parte decimal."],
+["o","SQL",`SELECT COUNT(*) FROM t WHERE n > 2;
+-- t.n: 1, 2, 3, 4, 5`,1,["2","3","5","4"],"Só 3, 4 e 5 passam no filtro."],
+["r","JavaScript",`let total = 0;
+for (let i = 1; i <= 4; i++) {
+  total += i;
+}
+console.log(total);`,0,0,"Declara, faz o laço, fecha e imprime (10)."],
+["m","JavaScript",`const d = Math.floor(Math.random() * 6) + 1;
+console.log("Dado:", d);
+if (d >= 4) {
+  console.log("Você ganhou!");
+} else {
+  console.log("Você perdeu!");
+}`,0,0,"Sorteia 1–6, mostra e decide o resultado."]
+],[
+["o","JavaScript",`const a = [1, 2, 3, 4];
+console.log(a.filter(n => n % 2 == 0).map(n => n * 3));`,1,["[2, 6]","[6, 12]","[3, 9]","[2, 4]"],"filter fica com 2 e 4; map multiplica por 3."],
+["o","Python",`s = "banana"
+print(s.count("an"), s[::-1][:2])`,2,["3 an","2 na","2 an","3 na"],"'an' aparece 2 vezes; invertida vira 'ananab' → 'an'."],
+["b","Java",`int[] v = {1, 2, 3};
+for (int i = 0; i <= v.length; i++) {
+  System.out.println(v[i]);
+}`,1,0,"Deve ser i < v.length; senão acessa o índice 3."],
+["o","Rust",`let v = vec![1, 2, 3];
+let s: i32 = v.iter().sum();
+println!("{}", s);`,0,["6","3","123","erro"],"sum() soma os elementos: 6."],
+["o","Kotlin",`val xs = listOf(3, 1, 2)
+println(xs.sorted().first())`,2,["3","2","1","[1]"],"Ordenado: 1, 2, 3; o primeiro é 1."],
+["o","Bash",`for i in 1 2 3; do
+  echo $((i * i))
+done`,1,["1, 2, 3","1, 4, 9","1, 8, 27","3, 6, 9"],"Imprime o quadrado de cada número, um por linha."],
+["r","Python",`def fib(n):
+    if n < 2:
+        return n
+    return fib(n-1) + fib(n-2)`,0,0,"Caso base primeiro, depois a recursão."],
+["m","Python",`palavra = "python"
+vidas = 3
+while vidas > 0:
+    letra = input("Letra: ")
+    if letra in palavra:
+        print("Tem!")
+    else:
+        vidas -= 1`,0,0,"Núcleo da Forca: laço, checagem da letra e perda de vidas."]
+],[
+["o","JavaScript",`console.log(typeof null, 0.1 + 0.2 === 0.3);`,1,["null true","object false","object true","null false"],"typeof null é 'object' (quirk histórico) e 0.1+0.2 tem erro de ponto flutuante."],
+["o","Python",`def f(a, l=[]):
+    l.append(a)
+    return l
+f(1)
+print(f(2))`,2,["[2]","[1]","[1, 2]","[]"],"O valor padrão mutável é criado uma vez e compartilhado."],
+["b","JavaScript",`for (var i = 0; i < 3; i++) {
+  setTimeout(() => console.log(i), 0);
+}`,0,0,"Com var, todos os callbacks veem o mesmo i (imprime 3 3 3). Use let."],
+["o","TypeScript",`type P = { x: number };
+const p: P = { x: 1 };
+console.log(p.x + 1);`,1,["11","2","x1","erro"],"x é number, então 1 + 1 = 2."],
+["o","C++",`vector<int> v = {5, 3, 8};
+sort(v.begin(), v.end());
+cout << v[1];`,1,["3","5","8","erro"],"Ordenado: 3, 5, 8; o índice 1 é 5."],
+["o","Swift",`let a: Int? = nil
+print(a ?? 7)`,2,["nil","0","7","erro"],"?? usa o valor padrão quando o opcional é nil."],
+["o","SQL",`SELECT dept, COUNT(*) FROM emp GROUP BY dept HAVING COUNT(*) > 1;
+-- emp: (A,TI) (B,TI) (C,RH)`,0,["TI 2","TI 2 e RH 1","RH 1","nenhuma linha"],"HAVING filtra grupos: só TI tem mais de 1."],
+["r","JavaScript",`let lo = 0, hi = a.length - 1;
+while (lo <= hi) {
+  const m = (lo + hi) >> 1;
+  if (a[m] === x) return m;
+  if (a[m] < x) lo = m + 1; else hi = m - 1;
+}
+return -1;`,0,0,"Busca binária: corta o intervalo pela metade a cada passo."],
+["m","JavaScript",`function venceu(b, j) {
+  for (let i = 0; i < 3; i++) {
+    if (b[i][0] === j && b[i][1] === j && b[i][2] === j) return true;
+  }
+  return false;
+}`,0,0,"Jogo da velha: confere se alguma linha é toda do jogador."]
+],[
+["o","JavaScript",`console.log(1);
+setTimeout(() => console.log(2), 0);
+Promise.resolve().then(() => console.log(3));
+console.log(4);`,1,["1 2 3 4","1 4 3 2","1 3 4 2","1 4 2 3"],"Síncrono, depois microtarefas (Promise), depois macrotarefas (setTimeout)."],
+["o","C",`int a[] = {10, 20, 30};
+int *p = a;
+printf("%d", *(p + 2));`,2,["20","10","30","endereço"],"p+2 aponta para o 3º elemento."],
+["b","Python + SQL",`def get_user(db, user_id):
+    q = "SELECT * FROM users WHERE id = " + user_id
+    return db.execute(q)`,1,0,"Concatenar entrada do usuário permite SQL Injection; use consulta parametrizada."],
+["o","Go",`ch := make(chan int)
+go func() { ch <- 42 }()
+fmt.Println(<-ch)`,1,["0","42","deadlock","erro"],"A goroutine envia 42 e a main recebe."],
+["o","Rust",`let a = String::from("oi");
+let b = a;
+println!("{}", a);`,1,["oi","erro de compilação","vazio","oioi"],"A posse de 'a' foi movida para 'b'; usar 'a' não compila."],
+["b","C",`char *s = malloc(4);
+strcpy(s, "abcd");
+printf("%s", s);
+free(s);`,1,0,"'abcd' precisa de 5 bytes (com o \\0): buffer overflow."],
+["o","Python",`a = [1, 2, 3]
+b = a
+b.append(4)
+print(len(a))`,1,["3","4","erro","1"],"b e a apontam para a mesma lista."],
+["r","JavaScript",`function debounce(fn, ms) {
+  let t;
+  return (...args) => {
+    clearTimeout(t);
+    t = setTimeout(() => fn(...args), ms);
+  };
+}`,0,0,"Cada chamada cancela o timer anterior e agenda um novo."],
+["m","JavaScript",`let x = 0, dir = 1;
+setInterval(() => {
+  x += dir;
+  if (x >= 9 || x <= 0) dir = -dir;
+  console.log("x =", x);
+}, 200);`,0,0,"Loop de jogo: move, inverte nas bordas e mostra."]
+]];
+const Q=[];T.forEach((ls,l)=>ls.forEach((t,i)=>Q.push({id:'L'+l+'T'+i,l,t:t[0],g:t[1],c:t[2].split('\n'),a:t[3],o:t[4],e:t[5]})));
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],$app=$('#app');
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const me=()=>({xp:Object.keys(DONE).length*10,done:DONE});
-const code=(ls,cls='')=>`<pre class="${cls}">${ls.map((l,i)=>`<span class="ln" data-i="${i}">${esc(l)}</span>`).join('')}</pre>`;
+const code=(ls,c='')=>`<pre class="${c}">${ls.map((l,i)=>`<span class="ln" data-i="${i}">${esc(l)}</span>`).join('')}</pre>`;
+const sb=supabase.createClient(SB_URL,SB_KEY);
+let USER=null,NAME='',DONE={},P=null,EX=null;
+const save=async()=>{if(USER)try{await sb.from('progress').upsert({user_id:USER,done:DONE,updated_at:new Date().toISOString()})}catch(e){}};
+const lvQ=l=>Q.filter(q=>q.l==l),lvD=l=>lvQ(l).filter(q=>DONE[q.id]).length,need=l=>Math.ceil(lvQ(l).length*.75);
+const unl=()=>{let u=DONE._u||0;while(u<4&&lvD(u)>=need(u))u++;return u};
+const xp=()=>Q.filter(q=>DONE[q.id]).length*10;
+const stats=()=>{const d=Q.filter(q=>DONE[q.id]);return[d.length,new Set(d.map(q=>q.g)).size,d.filter(q=>q.t=='m').length,LV.filter((_,l)=>lvD(l)==lvQ(l).length).length,lvD(4)==lvQ(4).length]};
+const B=[["🌱","Primeiro passo",s=>s[0]>=1],["🔟","10 tarefas",s=>s[0]>=10],["🏅","25 tarefas",s=>s[0]>=25],["🌍","Poliglota (6 linguagens)",s=>s[1]>=6],["🎮","Dev de minigames (3)",s=>s[2]>=3],["🧱","Um nível 100%",s=>s[3]>=1],["👑","Trilha Sênior concluída",s=>s[4]]];
+const have=()=>B.filter(b=>b[2](stats())).map(b=>b[1]);
+const toast=t=>{const d=document.createElement('div');d.className='glass';d.textContent=t;$('#ts').append(d);setTimeout(()=>d.remove(),3200)};
+const setTh=t=>{document.documentElement.dataset.theme=t;$('#th').textContent=t=='dark'?'☀️':'🌙';try{localStorage.setItem('lqt',t)}catch(e){}};
+let t0=null;try{t0=localStorage.getItem('lqt')}catch(e){}setTh(t0||(matchMedia('(prefers-color-scheme:light)').matches?'light':'dark'));
+document.addEventListener('click',e=>{const b=e.target.closest('#th,#out');if(!b)return;if(b.id=='th')setTh(document.documentElement.dataset.theme=='dark'?'light':'dark');else sb.auth.signOut()});
+const head=()=>`<div class="top up"><h1>🎮 LógicaQuest</h1><div class="row" style="margin:0 52px 0 0"><span class="tag">👤 ${esc(NAME)}</span><span class="tag">⭐ ${xp()} XP</span><button class="b3d sm" id="out">Sair</button></div></div>`;
 
 function login(){
-  $app.innerHTML=`<h1>🎮 LógicaQuest</h1><p>Aprenda lógica de programação jogando — do zero ao sênior, em várias linguagens.</p>
-  <div class="card"><h2>Entrar</h2><button class="pri" id="gg" style="width:100%">Entrar com Google</button>
-  <p style="text-align:center;color:var(--mu)">ou com e-mail</p>
+  $app.innerHTML=`<div class="glass card login"><h1>🎮 LógicaQuest</h1><p class="mu">Aprenda lógica de programação jogando, do zero ao sênior.</p>
+  <button class="b3d pri" id="gg" style="width:100%">Entrar com Google</button><p style="text-align:center" class="mu">ou com e-mail</p>
   <input type="text" id="n" placeholder="E-mail" autocomplete="email"><input type="password" id="p" placeholder="Senha (mínimo 8 caracteres)" autocomplete="current-password">
-  <div class="row"><button class="pri" id="in">Entrar</button><button id="rg">Criar conta</button></div><div id="er" style="color:var(--er);margin-top:8px"></div></div>`;
+  <div class="row"><button class="b3d pri" id="in">Entrar</button><button class="b3d" id="rg">Criar conta</button></div><div id="er" style="color:var(--er);margin-top:8px"></div></div>`;
   const er=t=>{$('#er').textContent=t};
   $('#gg').onclick=()=>sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin}});
   $('#in').onclick=async()=>{const{error}=await sb.auth.signInWithPassword({email:$('#n').value.trim(),password:$('#p').value});if(error)er('E-mail ou senha incorretos.')};
   $('#rg').onclick=async()=>{const p=$('#p').value;if(p.length<8){er('Use uma senha com 8+ caracteres.');return}const{data,error}=await sb.auth.signUp({email:$('#n').value.trim(),password:p});if(error)er(error.message);else if(!data.session)er('Conta criada! Confirme seu e-mail para ativar.')};
 }
-function $(s){return document.querySelector(s)}
-function head(){return`<div class="top"><h1>🎮 LógicaQuest</h1><div><span class="tag">👤 ${esc(NAME)}</span><span class="tag">⭐ ${me().xp} XP</span> <button id="out">Sair</button></div></div>`}
-function bindOut(){$('#out').onclick=()=>sb.auth.signOut()}
-function prog(l){const qs=Q.filter(q=>q.l==l),d=qs.filter(q=>me().done[q.id]).length;return[d,qs.length]}
 function home(){
-  $app.innerHTML=head()+`<div class="card"><h2>Onde você quer começar?</h2><p>Arraste: <b>0</b> = nunca programei · <b>100</b> = já sou sênior.</p>
-  <input type="range" id="r" min="0" max="100" value="0"><div class="top"><b id="rv">0 · Iniciante</b><button class="pri" id="go">Começar daqui</button></div></div>
-  <h2>Ou escolha um nível</h2><div class="grid">${LV.map((v,i)=>{const[d,t]=prog(i);return`<button class="lv card" data-l="${i}"><b>${v[0]} <small>(${v[1]})</small></b><small>${v[2]}</small><div class="bar" style="margin-top:8px"><i style="width:${d/t*100}%"></i></div><small>${d}/${t} jogos</small></button>`}).join('')}</div>`;
-  bindOut();
-  const lvOf=v=>Math.max(0,Math.min(4,Math.floor((v-1)/20)));
-  $('#r').oninput=e=>$('#rv').textContent=e.target.value+' · '+LV[lvOf(+e.target.value)][0];
-  $('#go').onclick=()=>level(lvOf(+$('#r').value));
-  document.querySelectorAll('.lv').forEach(b=>b.onclick=()=>level(+b.dataset.l));
+  const u=unl(),d=Q.filter(q=>DONE[q.id]).length,hv=have();
+  $app.innerHTML=head()+`<section class="glass card up"><div class="top"><b>Seu progresso</b><span class="tag">${d}/${Q.length} tarefas</span></div><div class="bar" style="margin-top:8px"><i style="width:${d/Q.length*100}%"></i></div></section>
+  <h2>Trilha de aprendizado</h2><p class="mu">Conclua 75% de cada nível para liberar o próximo. Já sabe tudo? Arrisque uma prova de nivelamento.</p>
+  <div class="grid">${LV.map((v,i)=>i<=u?`<button class="lv glass b3d up" data-l="${i}"><b>${i<u||lvD(i)==lvQ(i).length?'✅':'▶️'} ${v[0]} <small>(${v[1]})</small></b><small>${v[2]}</small><div class="bar"><i style="width:${lvD(i)/lvQ(i).length*100}%"></i></div><small>${lvD(i)}/${lvQ(i).length} tarefas</small></button>`
+  :`<div class="lv glass lock up"><b>🔒 ${v[0]} <small>(${v[1]})</small></b><small>${v[2]}</small><button class="b3d sm ex" data-l="${i}">🚀 Prova de nivelamento</button></div>`).join('')}</div>
+  <h2>Conquistas</h2><div class="bd">${B.map(b=>`<span class="glass ${hv.includes(b[1])?'':'off'}">${b[0]} ${b[1]}</span>`).join('')}</div>`;
+  $$('button.lv').forEach(b=>b.onclick=()=>level(+b.dataset.l));$$('.ex').forEach(b=>b.onclick=()=>exam(+b.dataset.l));
 }
 function level(l){
-  const qs=Q.filter(q=>q.l==l);
-  $app.innerHTML=head()+`<button id="bk">← Níveis</button><h2>${LV[l][0]} (${LV[l][1]})</h2><div class="grid">${qs.map(q=>`<button class="lv card ${me().done[q.id]?'done':''}" data-i="${q.id}"><b>${MODE[q.t]} ${me().done[q.id]?'✅':''}</b><span class="tag">${esc(q.g)}</span></button>`).join('')}</div>`;
-  bindOut();$('#bk').onclick=home;
-  document.querySelectorAll('.lv').forEach(b=>b.onclick=()=>play(+b.dataset.i));
+  const qs=lvQ(l);
+  $app.innerHTML=head()+`<div class="top"><button class="b3d sm" id="bk">← Níveis</button><button class="b3d sm" id="rf">↺ Refazer este nível</button></div>
+  <h2>${LV[l][0]} <small>(${LV[l][1]})</small></h2><p class="mu">Conclua ${need(l)} de ${qs.length} tarefas para liberar o próximo nível. As tarefas abrem em sequência.</p>
+  <div class="grid">${qs.map((q,i)=>{const dn=DONE[q.id],lk=i>0&&!dn&&!DONE[qs[i-1].id];return`<button class="lv glass b3d up ${dn?'done':''}" ${lk?'disabled':''} data-i="${q.id}"><b>${lk?'🔒':dn?'✅':'▶️'} ${K[q.t]}</b><span class="tag">${esc(q.g)}</span></button>`}).join('')}</div>`;
+  $('#bk').onclick=home;
+  $('#rf').onclick=()=>{if(confirm('Refazer o nível '+LV[l][0]+' do zero? Você continua com os outros níveis liberados.')){qs.forEach(q=>delete DONE[q.id]);save();level(l)}};
+  $$('button.lv').forEach(b=>b.onclick=()=>play(b.dataset.i));
 }
-function fin(q,ok){
-  let x='';if(ok&&!me().done[q.id]){DONE[q.id]=1;save();x=' +10 XP'}
-  const nx=Q.find(z=>z.l==q.l&&z.id>q.id);
-  $('#fb').innerHTML=`<div class="msg">${ok?'✅ Correto!'+x:'❌ Não foi dessa vez.'}<br>${esc(q.e)}<div class="row">${ok&&nx?'<button class="pri" id="nx">Próximo jogo →</button>':''}${ok?'':'<button id="rt">Tentar de novo</button>'}<button id="lb">Voltar ao nível</button></div></div>`;
-  $('#lb').onclick=()=>level(q.l);if($('#nx'))$('#nx').onclick=()=>play(nx.id);if($('#rt'))$('#rt').onclick=()=>play(q.id);
+function exam(l){
+  if(!confirm('Prova de nivelamento do nível '+LV[l][0]+': 3 desafios, sem dicas. Errou um, a prova acaba. Topa?'))return;
+  const ids=lvQ(l).filter(q=>'ob'.includes(q.t)).sort(()=>Math.random()-.5).slice(0,3).map(q=>q.id);EX={l,ids,i:0};play(ids[0]);
 }
+const nextEx=()=>{EX.i++;if(EX.i<3){toast('✅ Acertou! Próximo desafio...');setTimeout(()=>play(EX.ids[EX.i]),800)}else{DONE._u=Math.max(DONE._u||0,EX.l);save();toast('🔓 Nível '+LV[EX.l][0]+' liberado!');EX=null;home()}};
+const failEx=()=>{toast('❌ Prova reprovada. Estude a trilha e tente de novo.');EX=null;home()};
+const TIP={o:"Simule o código linha a linha, anotando o valor de cada variável.",b:"Procure erro de digitação, de limite (< ou <=) ou de lógica, uma linha por vez.",r:"Comece pelo que prepara os dados (declarações); o que depende deles vem depois."};
 function play(id){
-  const q=Q[id];
-  $app.innerHTML=head()+`<button id="bk">← ${LV[q.l][0]}</button><div class="card"><b>${MODE[q.t]}</b> <span class="tag">${esc(q.g)}</span>
-  <p>${q.t=='out'?'O que este código imprime?':q.t=='bug'?'Clique na linha com o erro. <i>Dica: '+esc(q.h)+'</i>':'Clique nas linhas na ordem certa para montar o código.'}</p><div id="box"></div><div id="fb"></div></div>`;
-  bindOut();$('#bk').onclick=()=>level(q.l);
-  const box=$('#box');
-  if(q.t=='out'){
-    box.innerHTML=code(q.c)+`<div class="opts">${q.o.map((o,i)=>`<button data-i="${i}">${esc(o)}</button>`).join('')}</div>`;
-    box.querySelectorAll('button').forEach(b=>b.onclick=()=>{const ok=+b.dataset.i==q.a;box.querySelectorAll('button').forEach(x=>x.disabled=true);b.classList.add(ok?'ok':'no');fin(q,ok)});
-  }else if(q.t=='bug'){
+  const q=Q.find(x=>x.id==id),ty=q.t=='m'?'r':q.t;P={h:0};
+  $app.innerHTML=head()+`<div class="top"><button class="b3d sm" id="bk">← Voltar</button>${EX?`<span class="tag">Prova ${EX.i+1}/3</span>`:''}</div>
+  <section class="glass card up"><b>${K[q.t]}</b> <span class="tag">${esc(q.g)}</span>
+  <p>${ty=='o'?'O que este código imprime?':ty=='b'?'Clique na linha com o erro.':(q.t=='m'?'Monte o minigame: ':'')+'coloque as linhas na ordem certa. Clique numa linha colocada para tirá-la.'}</p>
+  <div id="box"></div><div class="row">${EX?'':'<button class="b3d sm" id="hn">💡 Pedir dica</button>'}</div><div id="fb"></div></section>`;
+  $('#bk').onclick=()=>{EX=null;level(q.l)};
+  const box=$('#box'),fb=t=>{$('#fb').innerHTML=t};
+  const bad=()=>EX?setTimeout(failEx,700):fb('<div class="msg">❌ Quase! Releia e tente de novo — você não precisa recomeçar.</div>');
+  const win=()=>{
+    $$('#box button').forEach(b=>b.disabled=true);$$('#box .ln').forEach(l=>l.style.pointerEvents='none');
+    if(EX)return nextEx();
+    const was=have(),wu=unl(),first=!DONE[q.id];DONE[q.id]=1;save();
+    have().filter(n=>!was.includes(n)).forEach(n=>toast('🏆 Conquista: '+n));if(unl()>wu)toast('🔓 Novo nível liberado!');
+    const nx=Q[Q.indexOf(q)+1],nn=nx&&nx.l==q.l?nx:null;
+    fb(`<div class="msg">✅ Correto! ${first?'<b class="pop">+10 XP</b>':''}<br>${esc(q.e)}<div class="row">${nn?'<button class="b3d pri" id="nx">Próximo →</button>':''}<button class="b3d" id="lb">Voltar ao nível</button></div></div>`);
+    $('#lb').onclick=()=>level(q.l);if(nn)$('#nx').onclick=()=>play(nn.id);
+  };
+  let got=[];const pool=q.c.map((t,i)=>({t,i})).sort(()=>Math.random()-.5);
+  const draw=()=>{
+    const full=got.length==pool.length,ok=full&&got.every((g,k)=>g.i==k);
+    box.innerHTML=`<pre>${got.length?got.map((g,k)=>`<span class="ln pl ${full&&!ok&&g.i!=k?'no':''}" data-k="${k}">${esc(g.t)}</span>`).join(''):'<span class="mu">(clique nas linhas abaixo)</span>'}</pre><div class="row">${pool.filter(p=>!got.includes(p)).map(p=>`<button class="b3d chip" data-i="${p.i}">${esc(p.t)}</button>`).join('')}</div>`;
+    $$('.chip').forEach(b=>b.onclick=()=>{got.push(pool.find(p=>p.i==b.dataset.i));draw()});
+    $$('.pl').forEach(l=>l.onclick=()=>{got.splice(+l.dataset.k,1);draw()});
+    if(ok)win();else if(full)bad();
+  };
+  if(ty=='o'){
+    box.innerHTML=code(q.c)+`<div class="opts">${q.o.map((o,i)=>`<button class="b3d" data-i="${i}">${esc(o)}</button>`).join('')}</div>`;
+    $$('.opts button').forEach(b=>b.onclick=()=>{if(+b.dataset.i==q.a){b.classList.add('ok');win()}else{b.disabled=true;b.classList.add('no');bad()}});
+  }else if(ty=='b'){
     box.innerHTML=code(q.c,'pick');
-    box.querySelectorAll('.ln').forEach(l=>l.onclick=()=>{if(box.dataset.d)return;box.dataset.d=1;const ok=+l.dataset.i==q.a;l.classList.add(ok?'ok':'no');if(!ok)box.querySelectorAll('.ln')[q.a].classList.add('ok');fin(q,ok)});
-  }else{
-    const pool=q.c.map((t,i)=>({t,i})).sort(()=>Math.random()-.5),got=[];
-    const draw=()=>{box.innerHTML=`<pre>${got.length?got.map(g=>`<span class="ln">${esc(g.t)}</span>`).join(''):'<span style="color:var(--mu)">(vazio)</span>'}</pre><div class="row">${pool.filter(p=>!got.includes(p)).map(p=>`<button class="chip" data-i="${p.i}">${esc(p.t)}</button>`).join('')}</div><div class="row"><button id="rs">↺ Recomeçar</button></div>`;
-      box.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{got.push(pool.find(p=>p.i==b.dataset.i));if(got.length==pool.length){const ok=got.every(g=>g.t===q.c[got.indexOf(g)]);box.innerHTML=`<pre class="${ok?'ok':'no'}">${got.map(g=>`<span class="ln">${esc(g.t)}</span>`).join('')}</pre>`;fin(q,ok)}else draw()});
-      $('#rs').onclick=()=>{got.length=0;draw()}};
-    draw();
-  }
+    $$('.ln').forEach(l=>l.onclick=()=>{if(+l.dataset.i==q.a){l.classList.add('ok');win()}else{l.classList.add('no');bad()}});
+  }else draw();
+  if(!EX)$('#hn').onclick=()=>{
+    P.h++;
+    if(P.h==1)fb(`<div class="msg">💡 Dica 1: ${TIP[ty]}</div>`);
+    else if(P.h==2){
+      if(ty=='o')$$('.opts button').filter(b=>+b.dataset.i!=q.a&&!b.disabled).slice(0,2).forEach(b=>{b.disabled=true;b.classList.add('dim')});
+      else if(ty=='b'){$$('.ln')[q.a].classList.add('cand');$$('.ln')[(q.a+1)%q.c.length].classList.add('cand')}
+      else{const n=got.findIndex((g,k)=>g.i!=k),keep=n<0?got.length:n;got.length=keep;if(keep<pool.length)got.push(pool.find(p=>p.i==keep));draw()}
+      fb(`<div class="msg">💡 Dica 2: ${ty=='o'?'tirei duas opções erradas.':ty=='b'?'o erro está numa das linhas destacadas.':'coloquei a próxima linha certa para você.'}</div>`);
+    }else fb(`<div class="msg">💡 Dica 3: ${esc(q.e)}</div>`);
+  };
 }
 $app.innerHTML='<p>Carregando…</p>';
 sb.auth.onAuthStateChange((ev,ses)=>{setTimeout(async()=>{
